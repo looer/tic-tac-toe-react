@@ -1,10 +1,11 @@
 # Tic Tac Toe React
 
+
+![logo](/public/logo192.png)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and it follows the [React tutorial](https://reactjs.org/tutorial/tutorial.html) but extends its functionality and design.
 
 Made by Lorenzo Cella.
-
-![](/public/Screenshot.png)
 
 ## Basic Features
 
@@ -21,6 +22,8 @@ Made by Lorenzo Cella.
 - [ ] Add a toggle button that lets you sort the moves in either ascending or descending order.
 - [ ] When someone wins, highlight the three squares that caused the win.
 - [ ] When no one wins, display a message about the result being a draw.
+
+![screenshot of the tic tac toe app](/public/Screenshot.png)
 
 ## How to start
 
