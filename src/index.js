@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ConfettiExplosion from '@reonomy/react-confetti-explosion';
 import './index.css';
 
 /*
@@ -74,6 +75,7 @@ class Board extends React.Component {
 
 
 class Game extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = {
@@ -81,6 +83,7 @@ class Game extends React.Component {
         squares: Array(9).fill(null),
         position: null,
       }],
+      isExploding: false,
       stepNumber: 0,
       xIsNext: true
     }
@@ -108,6 +111,7 @@ class Game extends React.Component {
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
+      isExploding: false,
     })
   }
   render() {
@@ -115,6 +119,11 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber]
     const winner = calculateWinner(current.squares)
 
+    if (winner && !this.state.isExploding) {
+      this.setState({
+        isExploding: true,
+      })
+    }
     const moves = history.map((step, move) => {
       let row = 0
       let col = 0
@@ -151,6 +160,7 @@ class Game extends React.Component {
 
     return (
       <div className="game">
+        {this.state.isExploding && <ConfettiExplosion />}
         <div className="game-board">
           <Board
             squares={current.squares}
