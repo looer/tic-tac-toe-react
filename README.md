@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Made by Lorenzo Cella.
 
-![](./Screenshot.png)
+![](/public/Screenshot.png)
 
 ## Basic Features
 
