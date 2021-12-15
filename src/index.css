@@ -1,8 +1,53 @@
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
+  font: 22px "Century Gothic", Futura, sans-serif;
   margin: 20px;
+  background-color: rgb(16, 16, 84);
+  color: rgb(2, 2, 128);
+  color: white;
 }
 
+a {
+  color: white;
+}
+.subtitle {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.foot {
+  margin: 20px 0 0 0;
+  font-size: 8px;
+  font-style: italic;
+  color: darkgray;
+}
+
+.last {
+  background: rgb(183, 197, 227);
+  border: 1px solid rgb(255, 255, 255);
+  float: left;
+  font-size: 44px;
+  font-weight: bold;
+  line-height: 64px;
+  height: 64px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 64px; 
+}
+.history {
+  background-color: rgb(83, 75, 249);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 2px 10px;
+  margin: 2px;
+}
+h1 {
+  font-size: 1.2em;
+  margin-bottom: 0;
+}
 ol, ul {
   padding-left: 30px;
 }
@@ -18,18 +63,18 @@ ol, ul {
 }
 
 .square {
-  background: #fff;
-  border: 1px solid #999;
+  background: rgb(196, 210, 242);
+  border: 1px solid rgb(255, 255, 255);
   float: left;
-  font-size: 24px;
+  font-size: 44px;
   font-weight: bold;
-  line-height: 34px;
-  height: 34px;
+  line-height: 64px;
+  height: 64px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  width: 64px;
 }
 
 .square:focus {

@@ -15,11 +15,12 @@ TODO
 */
 
 function Square(props) {
+  const last = props.last ? "last" : "square";
   return (
     <button
-      className="square"
+      className={last}
       onClick={() => { props.onClick() }}
-      style={{ background: (props.last ? "#E5FFC7" : "white") }}
+      style={{ color: props.value === 'X' ? 'red' : 'blue' }}
     >
       {props.value}
     </button>
@@ -123,11 +124,16 @@ class Game extends React.Component {
         col = step.position % 3 + 1
       }
       const desc = move ?
-        'Go to move #' + move + ': ' + (move % 2 ? 'X' : 'O') + ' in ' + row + ', ' + col :
+        'Go to move: ' + (move % 2 ? 'X' : 'O') + ' in ' + row + ', ' + col :
         'Restart'
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>
+          <button className='history'
+            style={{
+              backgroundColor: move % 2 ? 'rgb(136, 5, 31)' : 'rgb(2, 2, 128)',
+              boxShadow: move % 2 ? '0px 0px 6px 2px rgb(136, 40, 61)' : '0px 0px 6px 2px rgb(40, 40, 128)',
+            }}
+            onClick={() => this.jumpTo(move)}>
             {desc}</button>
         </li>
       )
@@ -135,9 +141,9 @@ class Game extends React.Component {
 
     let status
     if (winner) {
-      status = 'Winner is ' + winner
+      status = `Winner is ${winner}!`
     } else if (this.state.stepNumber === 9) {
-      status = 'Draw'
+      status = 'It`s a Draw!'
     } else {
       status = 'Next player is ' + (this.state.xIsNext ? 'X' : 'O')
 
@@ -160,13 +166,6 @@ class Game extends React.Component {
   }
 }
 
-// ========================================
-
-ReactDOM.render(
-  <Game />,
-  document.getElementById('root')
-);
-
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -186,3 +185,13 @@ function calculateWinner(squares) {
   }
   return null;
 }
+
+ReactDOM.render(
+  <div>
+    <h1>Tic Tac Toe</h1>
+    <p className='subtitle'>Written in React - Made by <a href='https://github.com/looer'>Lorenzo Cella</a></p>
+
+    <Game />
+  </div>,
+  document.getElementById('root')
+);
