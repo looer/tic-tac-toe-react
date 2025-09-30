@@ -86,10 +86,10 @@ function Game(props) {
         squares: Array(9).fill(null),
         position: null,
       }],
-      showConfetti: false,
       stepNumber: 0,
       xIsNext: true
     })
+
 
   const handleClick = useCallback((i) => {
     const history = state.history.slice(0, state.stepNumber + 1)
@@ -114,7 +114,6 @@ function Game(props) {
       ...prevState,
       stepNumber: step,
       xIsNext: (step % 2) === 0,
-      showConfetti: false,
     }))
   }, [])
   
@@ -123,13 +122,9 @@ function Game(props) {
     // Add bounds checking to prevent undefined access
     const current = history[state.stepNumber] || history[history.length - 1]
     const winner = calculateWinner(current.squares)
-
-    if (winner && !state.showConfetti) {
-      setState(prevState => ({
-        ...prevState,
-        showConfetti: true,
-      }))
-    }
+    
+    // Derive confetti state - show confetti only when there's a winner and we're at the latest step
+    const showConfetti = winner && state.stepNumber === history.length - 1
     const moves = useMemo(() => history.map((step, move) => {
       let row = 0
       let col = 0
@@ -172,7 +167,7 @@ function Game(props) {
 
     return (
       <div className="flex flex-col lg:flex-row items-center gap-8">
-        {state.showConfetti && <Confetti />}
+        {showConfetti && <Confetti />}
         <div className="game-board">
           <Board
             squares={current.squares}
