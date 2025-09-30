@@ -60,7 +60,7 @@ function Board(props) {
   }, [props.position, props.squares, props.onClick])
 
   function generateBoard(cols, rows) {
-    let board = []
+    let board: any[] = []
 
     for (let i = 0; i < cols * rows; i++) {
       board.push(renderSquare(i))
