@@ -1,6 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ConfettiExplosion from '@reonomy/react-confetti-explosion';
+import React, { useState, useCallback, useMemo } from 'react';
+import {createRoot} from 'react-dom/client';
+import Confetti from 'react-confetti';
 import './index.css';
 
 /*
@@ -28,35 +28,34 @@ function Square(props) {
   )
 }
 
+function Board(props) {
 
-class Board extends React.Component {
-
-  renderSquare(i) {
+  const renderSquare = useCallback((i) => {
     return <Square
       key={i}
-      last={this.props.position === i}
-      value={this.props.squares[i]}
-      onClick={() => this.props.onClick(i)}
+      last={props.position === i}
+      value={props.squares[i]}
+      onClick={() => props.onClick(i)}
     />
-  }
+  }, [props.position, props.squares, props.onClick])
 
-  generateRow = (index, max) => {
+  function generateRow(index, max) {
     let rows = []
 
     for (index; index < max; index++) {
-      rows.push(this.renderSquare(index))
+      rows.push(renderSquare(index))
     }
     return rows
   }
 
-  generateBoard = (cols, rows) => {
+  function generateBoard(cols, rows) {
     let board = []
 
     for (let i = 0; i < cols * rows; i++) {
       if (i % cols === 0) {
         board.push(
           <div className="board-row" key={i}>
-            {this.generateRow(i, i + cols)}
+            {generateRow(i, i + cols)}
           </div>
         )
       }
@@ -64,67 +63,67 @@ class Board extends React.Component {
     return board
   }
 
-  render() {
     return (
       <div>
-        <div>{this.generateBoard(3, 3)}</div>
+        <div>{generateBoard(3, 3)}</div>
       </div>
     );
-  }
 }
 
 
-class Game extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
+function Game(props) {
+
+  const [state, setState] = useState({
       history: [{
         squares: Array(9).fill(null),
         position: null,
       }],
-      isExploding: false,
+      showConfetti: false,
       stepNumber: 0,
       xIsNext: true
-    }
-  }
+    })
 
-  handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1)
+  const handleClick = useCallback((i) => {
+    const history = state.history.slice(0, state.stepNumber + 1)
     const current = history[history.length - 1]
     const squares = current.squares.slice()
     if (calculateWinner(squares) || squares[i]) {
       return
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O'
-    this.setState({
+    squares[i] = state.xIsNext ? 'X' : 'O'
+    setState({
       history: history.concat([{
         squares: squares,
         position: i,
       }]),
       stepNumber: history.length,
-      xIsNext: !this.state.xIsNext,
+      xIsNext: !state.xIsNext,
     })
-  }
+  }, [state.history, state.stepNumber, state.xIsNext])
 
-  jumpTo(step) {
-    this.setState({
+  const jumpTo = useCallback((step) => {
+    setState(prevState => ({
+      ...prevState,
       stepNumber: step,
       xIsNext: (step % 2) === 0,
-      isExploding: false,
-    })
-  }
-  render() {
-    const history = this.state.history
-    const current = history[this.state.stepNumber]
+      showConfetti: false,
+    }))
+  }, [])
+  
+    const history = state.history
+    
+    // Add bounds checking to prevent undefined access
+    const current = history[state.stepNumber] || history[history.length - 1]
     const winner = calculateWinner(current.squares)
 
-    if (winner && !this.state.isExploding) {
-      this.setState({
-        isExploding: true,
-      })
+    if (winner && !state.showConfetti) {
+      setState(prevState => ({
+        ...prevState,
+        showConfetti: true,
+      }))
     }
-    const moves = history.map((step, move) => {
+    const moves = useMemo(() => history.map((step, move) => {
       let row = 0
       let col = 0
 
@@ -142,29 +141,29 @@ class Game extends React.Component {
               backgroundColor: move % 2 ? 'rgb(136, 5, 31)' : 'rgb(2, 2, 128)',
               boxShadow: move % 2 ? '0px 0px 6px 2px rgb(136, 40, 61)' : '0px 0px 6px 2px rgb(40, 40, 128)',
             }}
-            onClick={() => this.jumpTo(move)}>
+            onClick={() => jumpTo(move)}>
             {desc}</button>
         </li>
       )
-    })
+    }), [history, jumpTo])
 
     let status
     if (winner) {
       status = `Winner is ${winner}!`
-    } else if (this.state.stepNumber === 9) {
+    } else if (state.stepNumber === 9) {
       status = 'It`s a Draw!'
     } else {
-      status = 'Next player is ' + (this.state.xIsNext ? 'X' : 'O')
+      status = 'Next player is ' + (state.xIsNext ? 'X' : 'O')
 
     }
 
     return (
       <div className="game">
-        {this.state.isExploding && <ConfettiExplosion />}
+        {state.showConfetti && <Confetti />}
         <div className="game-board">
           <Board
             squares={current.squares}
-            onClick={(i) => this.handleClick(i)}
+            onClick={(i) => handleClick(i)}
             position={current.position} />
         </div>
         <div className="game-info">
@@ -174,7 +173,6 @@ class Game extends React.Component {
       </div>
     );
   }
-}
 
 function calculateWinner(squares) {
   const lines = [
@@ -196,12 +194,16 @@ function calculateWinner(squares) {
   return null;
 }
 
-ReactDOM.render(
+function App() {
+  return (
   <div>
     <h1>Tic Tac Toe</h1>
     <p className='subtitle'>Written in React - Made by <a href='https://github.com/looer'>Lorenzo Cella</a></p>
 
     <Game />
-  </div>,
-  document.getElementById('root')
-);
+  </div>
+  )
+}
+
+const root = createRoot(document.getElementById('root'))
+root.render(<App />)
